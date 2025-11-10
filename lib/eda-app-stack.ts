@@ -24,8 +24,8 @@ export class EDAAppStack extends cdk.Stack {
 
       // Integration infrastructure
 
-  const queue = new sqs.Queue(this, "img-uploadeded-q", {
-      receiveMessageWaitTime: cdk.Duration.seconds(5),
+  const imageProcessQueue = new sqs.Queue(this, "img-process-q", {
+      receiveMessageWaitTime: cdk.Duration.seconds(10),
     });
 
   // Lambda functions
