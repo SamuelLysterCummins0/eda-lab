@@ -20,7 +20,7 @@ export const handler: SQSHandler = async (event) => {
     const recordBody = JSON.parse(record.body);        // Parse SQS message
     const snsMessage = JSON.parse(recordBody.Message); // Parse SNS message
 
-    for (const s3Message of recordBody.Records) {
+  for (const s3Message of snsMessage.Records) {
   const s3e = s3Message.s3;
   // Object key may have spaces or unicode non-ASCII characters.
   const srcKey = decodeURIComponent(s3e.object.key.replace(/\+/g, " "));
@@ -33,7 +33,7 @@ export const handler: SQSHandler = async (event) => {
   // Check that the image type is supported
   const imageType = typeMatch[1].toLowerCase();
   if (imageType != "jpeg" && imageType != "png") {
-    throw new Error("Unsupported image type: ${imageType. ");
+    throw new Error(`Unsupported image type: ${imageType}`);
   }
 
   await ddbDocClient.send(
@@ -46,11 +46,8 @@ export const handler: SQSHandler = async (event) => {
   );
 }
       }
-    };
+    }
   
-
-
-
 function createDDbDocClient() {
   const ddbClient = new DynamoDBClient({ region: process.env.REGION });
   const marshallOptions = {
